@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>智能体概念手册 · Agent Lexicon</title>
+<link rel="preconnect" href="https://miaoda.feishu.cn" />
+<link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" />
+<style>
+  :root{
+    --bg:#0A0A0C;
+    --bg-2:#0E0E11;
+    --ink:#EDEAE3;
+    --ink-2:#B4B1AA;
+    --muted:#7A7A80;
+    --line:rgba(237,234,227,.10);
+    --line-2:rgba(237,234,227,.055);
+    --gold:#C6A15B;
+    --gold-hi:#E4CB95;
+    --serif:"Noto Serif SC","Songti SC","STSong",serif;
+    --sans:"Noto Sans SC",-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+  }
+
+  *,*::before,*::after{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(1400px 700px at 82% -12%, rgba(198,161,91,.10), transparent 62%),
+      radial-gradient(1000px 800px at 4% 6%, rgba(110,130,165,.055), transparent 60%),
+      var(--bg);
+    color:var(--ink);
+    font-family:var(--sans);
+    font-weight:400;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+    overflow-x:hidden;
+  }
+  /* 细颗粒噪点 */
+  body::before{
+    content:"";
+    position:fixed; inset:0; z-index:9; pointer-events:none;
+    opacity:.035;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+
+  ::selection{background:rgba(198,161,91,.28); color:#fff;}
+
+  a{color:inherit; text-decoration:none;}
+
+  /* ============ 顶栏 ============ */
+  .topbar{
+    position:fixed; top:0; left:0; right:0; z-index:20;
+    display:flex; align-items:center; justify-content:space-between;
+    height:62px; padding:0 48px;
+    background:rgba(10,10,12,.78);
+    -webkit-backdrop-filter:blur(18px) saturate(140%);
+    backdrop-filter:blur(18px) saturate(140%);
+    border-bottom:1px solid rgba(237,234,227,.06);
+  }
+  .brand{display:flex; align-items:center; gap:12px;}
+  .brand-mark{
+    width:22px; height:22px; border:1px solid rgba(198,161,91,.55); border-radius:50%;
+    display:grid; place-items:center;
+  }
+  .brand-mark i{width:6px; height:6px; background:var(--gold); display:block; transform:rotate(45deg);}
+  .brand-txt{font:500 11px/1 var(--sans); letter-spacing:.30em; color:rgba(237,234,227,.72);}
+  .topbar-meta{font:400 10.5px/1 var(--sans); letter-spacing:.20em; color:var(--muted);}
+  .topbar-meta b{color:var(--gold); font-weight:500;}
+
+  .progress{position:absolute; left:0; bottom:-1px; width:100%; height:1px; background:transparent;}
+  .progress-fill{
+    height:1px; width:100%; background:linear-gradient(90deg, rgba(198,161,91,.25), var(--gold));
+    transform:scaleX(0); transform-origin:0 50%;
+  }
+
+  /* ============ 容器 ============ */
+  .wrap{max-width:1340px; margin:0 auto; padding:0 48px;}
+
+  /* ============ HERO ============ */
+  .hero{position:relative; padding:150px 0 96px; overflow:hidden;}
+  .hero::before{
+    content:""; position:absolute; inset:0;
+    background-image:
+      linear-gradient(rgba(237,234,227,.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(237,234,227,.07) 1px, transparent 1px);
+    background-size:88px 88px;
+    -webkit-mask-image:radial-gradient(ellipse at 62% 38%, #000 0%, rgba(0,0,0,.55) 45%, transparent 78%);
+    mask-image:radial-gradient(ellipse at 62% 38%, #000 0%, rgba(0,0,0,.55) 45%, transparent 78%);
+    opacity:.5; pointer-events:none;
+  }
+  .hero-inner{
+    position:relative; display:grid; grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);
+    gap:60px; align-items:center;
+  }
+
+  .eyebrow{
+    display:flex; align-items:center; gap:14px;
+    font:500 10.5px/1 var(--sans); letter-spacing:.30em; color:var(--gold);
+    margin-bottom:34px;
+  }
+  .eyebrow .dash{width:34px; height:1px; background:var(--gold); opacity:.7;}
+  .eyebrow .thin{color:rgba(237,234,227,.42); letter-spacing:.16em;}
+
+  h1{
+    margin:0;    font-family:var(--serif); font-weight:700;
+    font-size:clamp(46px, 7.6vw, 92px);
+    line-height:1.05;
+    letter-spacing:.01em;
+    color:var(--ink);
+  }
+  h1 em{
+    display:block; font-style:normal; font-weight:400;
+    color:var(--gold-hi);
+    letter-spacing:.12em;
+  }
+
+  .hero-lede{
+    margin:34px 0 0; max-width:440px;
+    font-size:15px; line-height:2; color:var(--ink-2);
+  }
+  .hero-lede b{color:var(--ink); font-weight:500;}
+
+  .hero-facts{
+    display:flex; gap:44px; margin-top:46px; padding-top:26px;
+    border-top:1px solid rgba(237,234,227,.12); max-width:470px;
+  }
+  .fact .n{font-family:var(--serif); font-size:26px; color:var(--gold); line-height:1;}
+  .fact .t{margin-top:8px; font-size:10px; letter-spacing:.18em; color:var(--muted);}
+
+  /* 概念轨道图 */
+  .orb{
+    position:relative; aspect-ratio:1; width:100%; max-width:430px; margin-left:auto;
+    display:grid; place-items:center;
+  }
+  .ring{position:absolute; border-radius:50%; border:1px solid rgba(198,161,91,.16);}
+  .r1{width:100%; height:100%;}
+  .r2{width:74%; height:74%; border-color:rgba(237,234,227,.13);}
+  .r3{width:48%; height:48%; border-color:rgba(198,161,91,.28);}
+  .r4{
+    width:132%; height:132%; border:1px dashed rgba(237,234,227,.10);
+    animation:spin 90s linear infinite;
+  }
+  .r5{width:22%; height:22%; border-color:rgba(198,161,91,.42);}
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  .axis{position:absolute; background:rgba(237,234,227,.10);}
+  .axis-v{width:1px; height:132%;}
+  .axis-h{height:1px; width:132%;}
+
+  .core{
+    position:relative; width:8px; height:8px; background:var(--gold);
+    transform:rotate(45deg); box-shadow:0 0 24px 3px rgba(198,161,91,.45);
+  }
+
+  .orb-label{
+    position:absolute; font:500 9px/1 var(--sans); letter-spacing:.24em;
+    color:rgba(237,234,227,.55); white-space:nowrap;
+  }
+  .ol-1{top:8%; left:50%; transform:translateX(-50%);}
+  .ol-2{bottom:16%; right:6%; text-align:right;}
+  .ol-3{top:50%; left:-6%; transform:translateY(-50%); color:rgba(198,161,91,.8);}
+
+  .hero-scroll{
+    position:relative; margin-top:64px; display:flex; align-items:center; gap:14px;
+    font-size:10px; letter-spacing:.24em; color:var(--muted);
+  }
+  .hero-scroll .line{width:1px; height:44px; background:linear-gradient(180deg, var(--gold), transparent);}
+
+  /* ============ 版式骨架 ============ */
+  .shell{
+    display:grid; grid-template-columns:176px minmax(0,1fr);
+    column-gap:68px; padding-bottom:60px;
+  }
+  .toc{position:sticky; top:112px; align-self:start;}
+  .toc-title{
+    font:500 9.5px/1 var(--sans); letter-spacing:.26em; color:var(--muted);
+    padding-bottom:18px; border-bottom:1px solid var(--line);
+    display:flex; justify-content:space-between; gap:8px;
+  }
+  .toc-title span{color:rgba(237,234,227,.34); letter-spacing:.14em;}
+  .toc nav{display:flex; flex-direction:column; margin-top:12px;}
+  .toc a{
+    position:relative; display:flex; align-items:baseline; gap:12px;
+    padding:11px 0 11px 0; font-size:12.5px; color:rgba(237,234,227,.48);
+    transition:color .35s ease, padding .35s ease;
+  }
+  .toc a .num{font:400 9.5px/1 var(--sans); letter-spacing:.12em; color:rgba(237,234,227,.26); transition:color .35s ease;}
+  .toc a:hover{color:rgba(237,234,227,.86);}
+  .toc a.on{color:var(--gold-hi); padding-left:14px;}
+  .toc a.on .num{color:var(--gold);}
+  .toc a.on::before{
+    content:""; position:absolute; left:0; top:14px; width:2px; height:12px;
+    background:var(--gold); box-shadow:0 0 10px rgba(198,161,91,.6);
+  }
+  .toc-foot{
+    margin-top:30px; padding-top:16px; border-top:1px solid var(--line);
+    font:400 9.5px/1.8 var(--sans); letter-spacing:.14em; color:rgba(237,234,227,.30);
+  }
+
+  main{min-width:0; max-width:900px;}
+
+  /* ============ 章节 ============ */
+  .sec{padding-top:40px; scroll-margin-top:96px;}
+  .creed{scroll-margin-top:96px;}
+  .sec + .sec{margin-top:104px; padding-top:88px; border-top:1px solid var(--line-2);}
+
+  .sec-head{display:grid; grid-template-columns:auto 1fr; align-items:end; gap:26px;}
+  .sec-no{
+    font-family:var(--serif); font-size:46px; line-height:.86;
+    color:rgba(198,161,91,.62); letter-spacing:.02em;
+  }
+  .sec-kicker{
+    font:500 9.5px/1 var(--sans); letter-spacing:.30em; color:var(--muted); margin-bottom:14px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .sec-kicker::after{content:""; flex:0 0 28px; height:1px; background:rgba(198,161,91,.45);}
+  h2{
+    margin:0; font-family:var(--serif); font-weight:600;
+    font-size:clamp(27px,3.3vw,38px); line-height:1.3; letter-spacing:.02em; color:var(--ink);
+  }
+  .sec-lead{
+    margin:26px 0 0; max-width:600px;
+    font-size:15.5px; line-height:2.05; color:var(--ink-2);
+  }
+
+  /* ============ 卡片 ============ */
+  .cards{
+    margin-top:52px; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:22px;
+  }
+  .card{
+    position:relative; padding:34px 30px 26px;
+    border:1px solid var(--line);
+    background:linear-gradient(158deg, rgba(255,255,255,.030), rgba(255,255,255,.008) 52%, rgba(255,255,255,.014));
+    transition:border-color .5s ease, transform .5s cubic-bezier(.2,.7,.2,1), box-shadow .5s ease, background .5s ease;
+  }
+  .card::before{
+    content:""; position:absolute; left:-1px; top:-1px; width:26px; height:1px; background:var(--gold);
+    opacity:0; transition:opacity .5s ease;
+  }
+  .card:hover{
+    transform:translateY(-3px);
+    border-color:rgba(198,161,91,.32);
+    box-shadow:0 26px 50px -28px rgba(0,0,0,.9);
+  }
+  .card:hover::before{opacity:1;}
+
+  .card-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:20px;}
+  .card-no{font:400 9.5px/1 var(--sans); letter-spacing:.20em; color:rgba(237,234,227,.30);}
+  .card-latin{
+    font:500 9px/1 var(--sans); letter-spacing:.26em; color:rgba(198,161,91,.85);
+    padding:6px 9px; border:1px solid rgba(198,161,91,.24);
+  }
+  .card h3{
+    margin:0 0 14px; font-family:var(--serif); font-weight:600; font-size:25px;
+    letter-spacing:.03em; color:var(--ink);
+  }
+  .card p{margin:0; font-size:14.5px; line-height:1.95; color:var(--ink-2);}
+  .card p strong{color:var(--ink); font-weight:500;}
+
+  .subs{margin:18px 0 0; padding:0; list-style:none;}
+  .subs li{
+    position:relative; padding-left:16px; margin-bottom:13px;
+    font-size:13.5px; line-height:1.85; color:var(--ink-2);
+  }
+  .subs li::before{
+    content:""; position:absolute; left:0; top:5px; width:1px; height:14px;
+    background:rgba(198,161,91,.55);
+  }
+  .subs .s-en{
+    display:inline-block; margin-right:8px;
+    font:500 9.5px/1 var(--sans); letter-spacing:.14em; color:rgba(198,161,91,.9);
+    vertical-align:1px;
+  }
+  .subs b{color:var(--ink); font-weight:500;}
+
+  .eg{
+    margin-top:20px; font-size:12px; color:rgba(237,234,227,.56); letter-spacing:.02em;
+  }
+  .eg .k{
+    display:inline-block; margin-right:10px; color:var(--gold);
+    font-size:9.5px; letter-spacing:.16em; vertical-align:1px;
+  }
+
+  .card-note{
+    margin-top:22px; padding-top:13px; border-top:1px dashed rgba(237,234,227,.13);
+    font-size:10.5px; line-height:1.8; color:rgba(237,234,227,.44); letter-spacing:.02em;
+  }
+  .card-note b{color:rgba(228,203,149,.92); font-weight:500; letter-spacing:.06em;}
+
+  /* ============ 层级图 ============ */
+  .layers{margin-top:52px;}
+  .layer{
+    display:grid; grid-template-columns:118px minmax(0,1fr); gap:34px;
+    padding:28px 0; border-top:1px solid rgba(237,234,227,.09);
+  }
+  .layer:last-of-type{border-bottom:1px solid rgba(237,234,227,.09);}
+  .l-code{
+    font-family:var(--serif); font-size:15px; color:rgba(198,161,91,.9);
+    letter-spacing:.06em;
+  }
+  .l-cn{
+    display:block; margin-top:8px; font:500 15px/1.4 var(--sans); color:var(--ink); letter-spacing:.06em;
+  }
+  .l-en{
+    display:block; margin-top:7px;
+    font:400 8.5px/1 var(--sans); letter-spacing:.22em; color:rgba(237,234,227,.36);
+  }
+  .l-chips{display:flex; flex-wrap:wrap; gap:9px;}
+  .chip{
+    padding:9px 14px; border:1px solid rgba(237,234,227,.14);
+    font-size:12.5px; color:rgba(237,234,227,.86); letter-spacing:.02em;
+    background:rgba(255,255,255,.018);
+    transition:border-color .4s ease, color .4s ease, background .4s ease;
+  }
+  .chip:hover{border-color:rgba(198,161,91,.38); color:var(--gold-hi); background:rgba(198,161,91,.06);}
+  .chip small{
+    display:block; margin-top:5px;
+    font:400 8.5px/1 var(--sans); letter-spacing:.18em; color:rgba(237,234,227,.34);
+  }
+  .l-desc{
+    margin-top:14px; font-size:12px; color:rgba(237,234,227,.42); letter-spacing:.04em;
+  }
+
+  .l-link{
+    display:flex; align-items:center; gap:14px;
+    padding:14px 0 14px 118px;
+    font-size:10.5px; letter-spacing:.22em; color:rgba(198,161,91,.72);
+  }
+  .l-link .bar{width:1px; height:22px; background:linear-gradient(180deg, rgba(198,161,91,.7), rgba(198,161,91,.15));}
+
+  /* ============ 包装三块 ============ */
+  .pack{margin-top:52px; display:flex; flex-direction:column; gap:0;}
+  .pack-item{
+    display:grid; grid-template-columns:56px minmax(0,1fr); gap:26px;
+    padding:34px 0; border-top:1px solid rgba(237,234,227,.09);
+  }
+  .pack-item:last-child{border-bottom:1px solid rgba(237,234,227,.09);}
+  .p-key{
+    font-family:var(--serif); font-size:22px; color:rgba(198,161,91,.78); line-height:1;
+  }
+  .p-body h3{
+    margin:0 0 12px; font-family:var(--serif); font-weight:600; font-size:20px; color:var(--ink);
+    letter-spacing:.03em;
+  }
+  .p-body h3 span{
+    margin-left:12px; font-family:var(--sans); font-weight:400; font-size:9px;
+    letter-spacing:.22em; color:rgba(237,234,227,.36); vertical-align:3px;
+  }
+  .p-body p{margin:0; font-size:14px; line-height:1.95; color:var(--ink-2); max-width:620px;}
+  .p-terms{display:flex; flex-wrap:wrap; gap:8px; margin-top:18px;}
+  .p-terms span{
+    padding:7px 13px; border:1px solid rgba(237,234,227,.12); border-radius:2px;
+    font-size:12px; color:rgba(237,234,227,.8);
+  }
+
+  .roster{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1px; margin-top:22px; background:rgba(237,234,227,.09);}
+  .r-item{
+    padding:26px 22px; background:var(--bg-2);
+    transition:background .45s ease;
+  }
+  .r-item:hover{background:#121216;}
+  .r-co{font:500 9px/1 var(--sans); letter-spacing:.24em; color:rgba(237,234,227,.38);}
+  .r-name{
+    margin-top:14px; font-family:var(--serif); font-size:24px; line-height:1.2;
+    color:var(--gold-hi); letter-spacing:.04em;
+  }
+  .r-name.sm{font-size:19px; letter-spacing:.06em;}
+  .r-zh{margin-top:10px; font-size:11px; line-height:1.7; color:rgba(237,234,227,.5);}
+  .roster-note{
+    margin-top:14px; font-size:10.5px; line-height:1.8; color:rgba(237,234,227,.34); letter-spacing:.02em;
+  }
+
+  /* ============ 辨析 ============ */
+  .duels{margin-top:46px;}
+  .duel{
+    display:grid; grid-template-columns:minmax(0,1fr) 76px minmax(0,1fr);
+    align-items:center; padding:36px 0; border-top:1px solid rgba(237,234,227,.09);
+  }
+  .duel:last-child{border-bottom:1px solid rgba(237,234,227,.09);}
+  .d-side{padding-right:18px;}
+  .d-side.right{padding-right:0; padding-left:18px;}
+  .d-label{
+    font:500 9px/1 var(--sans); letter-spacing:.24em; color:rgba(237,234,227,.36);
+    margin-bottom:14px;
+  }
+  .d-side h4{
+    margin:0 0 12px; font-family:var(--serif); font-weight:600; font-size:26px;
+    letter-spacing:.03em; color:var(--ink);
+  }
+  .d-side h4 span{
+    margin-left:10px; font-family:var(--sans); font-size:9.5px; font-weight:400;
+    letter-spacing:.18em; color:rgba(198,161,91,.75); vertical-align:2px;
+  }
+  .d-side p{margin:0; font-size:13.5px; line-height:1.9; color:var(--ink-2);}
+  .d-mid{position:relative; display:grid; place-items:center; align-self:stretch;}
+  .d-mid::before{
+    content:""; position:absolute; top:-1px; bottom:-1px; left:50%; width:1px;
+    background:linear-gradient(180deg, rgba(237,234,227,.14), rgba(198,161,91,.38), rgba(237,234,227,.14));
+  }
+  .d-mid span{
+    position:relative; display:grid; place-items:center; width:42px; height:42px;
+    border:1px solid rgba(198,161,91,.42); border-radius:50%;
+    font:500 9px/1 var(--sans); letter-spacing:.18em; color:var(--gold);
+    background:var(--bg);
+  }
+  .d-take{
+    margin-top:20px; font-size:11.5px; color:rgba(237,234,227,.4); letter-spacing:.02em;
+  }
+  .d-take::before{content:"→"; margin-right:8px; color:rgba(198,161,91,.8);}
+
+  /* ============ 口诀 ============ */
+  .creed{
+    position:relative; margin-top:96px; padding:84px 0 88px;
+    border-top:1px solid rgba(237,234,227,.09); border-bottom:1px solid rgba(237,234,227,.09);
+    text-align:center; overflow:hidden;
+  }
+  .creed::before{
+    content:""; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+    width:760px; height:420px;
+    background:radial-gradient(ellipse at center, rgba(198,161,91,.11), transparent 68%);
+    pointer-events:none;
+  }
+  .creed-kicker{
+    position:relative; font:500 9.5px/1 var(--sans); letter-spacing:.32em;
+    color:rgba(198,161,91,.8); margin-bottom:36px;
+  }
+  .creed p{
+    position:relative; margin:0 auto 16px; max-width:100%;
+    font-family:var(--serif); font-weight:400;
+    font-size:clamp(21px,2.85vw,32px); line-height:1.7; letter-spacing:.03em;
+    color:rgba(237,234,227,.94);
+  }
+  .creed p .dim{color:rgba(237,234,227,.52);}
+  .creed p:last-child{margin-bottom:0; margin-top:34px;}
+  .creed p:last-child .gold{color:var(--gold-hi);}
+
+  /* ============ 术语表 ============ */
+  .g-block{margin-top:56px;}
+  .g-block + .g-block{margin-top:64px;}
+  .g-head{
+    display:flex; align-items:baseline; justify-content:space-between; gap:16px;
+    padding-bottom:16px; border-bottom:1px solid rgba(198,161,91,.28);
+  }
+  .g-head h3{
+    margin:0; font-family:var(--serif); font-weight:600; font-size:19px; letter-spacing:.05em; color:var(--ink);
+  }
+  .g-head span{font:400 9px/1 var(--sans); letter-spacing:.26em; color:rgba(198,161,91,.7);}
+
+  .g-list{margin:0;}
+  .g-row{
+    display:grid; grid-template-columns:190px minmax(0,1fr); gap:26px;
+    padding:19px 0; border-bottom:1px solid rgba(237,234,227,.07);
+  }
+  .g-row dt{
+    font-family:var(--serif); font-size:16px; color:var(--gold-hi); letter-spacing:.03em;
+    line-height:1.5;
+  }
+  .g-row dt .pos{
+    display:block; margin-top:5px; font-family:var(--sans); font-size:8.5px;
+    letter-spacing:.2em; color:rgba(237,234,227,.3);
+  }
+  .g-row dd{margin:0;}
+  .g-row dd b{
+    display:block; font-size:13.5px; font-weight:500; color:var(--ink); letter-spacing:.02em;
+  }
+  .g-row dd p{
+    margin:7px 0 0; font-size:12.5px; line-height:1.85; color:rgba(237,234,227,.55);
+  }
+
+  .g-mini{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:0 34px;}
+  .gm{
+    display:flex; align-items:baseline; gap:12px; padding:13px 0;
+    border-bottom:1px solid rgba(237,234,227,.07);
+  }
+  .gm b{
+    flex:0 0 136px; font:500 10px/1.5 var(--sans); letter-spacing:.16em;
+    color:rgba(198,161,91,.88);
+  }
+  .gm span{font-size:12px; line-height:1.7; color:rgba(237,234,227,.55);}
+
+  /* ============ FOOTER ============ */
+  footer{
+    margin-top:110px; padding:44px 0 64px; border-top:1px solid var(--line-2);
+  }
+  .foot-inner{display:flex; justify-content:space-between; align-items:flex-start; gap:40px; flex-wrap:wrap;}
+  .foot-note{max-width:560px; font-size:10.5px; line-height:1.95; color:rgba(237,234,227,.36); letter-spacing:.02em;}
+  .foot-sign{font:400 9px/1.8 var(--sans); letter-spacing:.2em; color:rgba(237,234,227,.3); text-align:right;}
+
+  /* ============ 入场动画 ============ */
+  .reveal{opacity:0; transform:translateY(20px); transition:opacity .9s cubic-bezier(.2,.7,.2,1), transform .9s cubic-bezier(.2,.7,.2,1);}
+  .reveal.in{opacity:1; transform:none;}
+
+  .fade-up{animation:fadeUp 1.1s cubic-bezier(.2,.7,.2,1) both;}
+  @keyframes fadeUp{from{opacity:0; transform:translateY(26px);} to{opacity:1; transform:none;}}
+
+  /* ============ 响应式 ============ */
+  @media (max-width:1120px){
+    .shell{grid-template-columns:1fr; column-gap:0;}
+    .toc{display:none;}
+    main{max-width:none;}
+    .hero-inner{grid-template-columns:1fr; gap:0;}
+    .orb{max-width:300px; margin:52px auto 0;}
+    .orb-label{display:none;}
+  }
+  @media (max-width:880px){
+    .wrap{padding:0 26px;}
+    .topbar{padding:0 26px;}
+    .topbar-meta{display:none;}
+    .cards{grid-template-columns:1fr;}
+    .roster{grid-template-columns:repeat(2,minmax(0,1fr));}
+    .layer{grid-template-columns:1fr; gap:16px; padding:24px 0;}
+    .l-link{padding-left:0;}
+    .duel{grid-template-columns:1fr; gap:0; padding:30px 0;}
+    .d-mid{height:52px; margin:14px 0 8px;}
+    .d-mid::before{top:50%; bottom:auto; left:0; right:0; width:auto; height:1px;
+      background:linear-gradient(90deg, rgba(237,234,227,.05), rgba(198,161,91,.38), rgba(237,234,227,.05));}
+    .d-side{padding-right:0;}
+    .d-side.right{padding-left:0;}
+    .g-row{grid-template-columns:1fr; gap:8px;}
+    .g-mini{grid-template-columns:1fr;}
+    .gm b{flex:0 0 116px;}
+  }
+  @media (max-width:560px){
+    .hero{padding:118px 0 70px;}
+    .hero-facts{gap:28px;}
+    .fact .n{font-size:22px;}
+    .hero-scroll{display:none;}
+    .roster{grid-template-columns:1fr;}
+    .pack-item{grid-template-columns:1fr; gap:10px;}
+    .creed{padding:60px 0;}
+    .sec + .sec{margin-top:76px; padding-top:64px;}
+    .sec-no{font-size:34px;}
+    .card{padding:28px 22px 22px;}
+    .foot-sign{text-align:left;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ===================== 顶栏 ===================== -->
+<div class="topbar">
+  <div class="brand">
+    <span class="brand-mark"><i></i></span>
+    <span class="brand-txt">AGENT LEXICON</span>
+  </div>
+  <div class="topbar-meta">概念手册 <b>/</b> 中英对照版 <b>/</b> 2026</div>
+  <div class="progress"><div class="progress-fill"></div></div>
+</div>
+
+<div class="wrap">
+
+  <!-- ===================== HERO ===================== -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-copy">
+        <div class="eyebrow fade-up">
+          <span class="dash"></span>FIELD NOTES<span class="thin">/ 现场笔记 · 概念整理</span>
+        </div>
+        <h1 class="fade-up" style="animation-delay:.08s">智能体<br><em>概念手册</em></h1>
+        <p class="hero-lede fade-up" style="animation-delay:.16s">
+          技能、智能体、Bot、副驾驶 —— 这些词常被混着用。这份手册把它们分成两层：<b>一层是它凭什么工作</b>，<b>一层是它被包装成什么</b>。
+        </p>
+        <div class="hero-facts fade-up" style="animation-delay:.24s">
+          <div class="fact"><div class="n">04</div><div class="t">技术形态</div></div>
+          <div class="fact"><div class="n">03</div><div class="t">包装维度</div></div>
+          <div class="fact"><div class="n">34</div><div class="t">术语注解</div></div>
+        </div>
+      </div>
+
+      <div class="orb fade-up" style="animation-delay:.3s" aria-hidden="true">
+        <span class="ring r4"></span>
+        <span class="ring r1"></span>
+        <span class="ring r2"></span>
+        <span class="ring r3"></span>
+        <span class="ring r5"></span>
+        <span class="axis axis-v"></span>
+        <span class="axis axis-h"></span>
+        <span class="core"></span>
+        <span class="orb-label ol-1">PACKAGING 包装</span>
+        <span class="orb-label ol-2">TECHNICAL 技术</span>
+        <span class="orb-label ol-3">AGENT 智能体</span>
+      </div>
+    </div>
+
+    <div class="hero-scroll">
+      <span class="line"></span>
+      SCROLL TO READ · 向下阅读
+    </div>
+  </section>
+
+  <!-- ===================== 主骨架 ===================== -->
+  <div class="shell">
+
+    <aside class="toc">
+      <div class="toc-title">目录 <span>CONTENTS</span></div>
+      <nav>
+        <a href="#nature" class="on"><span class="num">01</span>技术本质</a>
+        <a href="#layers"><span class="num">02</span>从本质到包装</a>
+        <a href="#packaging"><span class="num">03</span>产品叫法</a>
+        <a href="#distinctions"><span class="num">04</span>关键辨析</a>
+        <a href="#mnemonic"><span class="num">05</span>记忆口诀</a>
+        <a href="#glossary"><span class="num">06</span>术语对照</a>
+      </nav>
+      <div class="toc-foot">单页文档<br>中文释义 · 英文词注</div>
+    </aside>
+
+    <main>
+
+      <!-- ========== 01 技术本质 ========== -->
+      <section class="sec" id="nature">
+        <div class="sec-head reveal">
+          <span class="sec-no">01</span>
+          <div>
+            <div class="sec-kicker">TECHNICAL NATURE</div>
+            <h2>按技术本质分类</h2>
+          </div>
+        </div>
+        <p class="sec-lead reveal">
+          先看它凭什么工作，而不是叫什么名字。技术本质决定能力边界，名字只决定它出现在什么场景里。
+        </p>
+
+        <div class="cards">
+          <article class="card reveal">
+            <div class="card-head">
+              <span class="card-no">Nº 01</span>
+              <span class="card-latin">SKILL</span>
+            </div>
+            <h3>技能</h3>
+            <p>一套可以反复复用的操作说明或工作流。它不自己决定目标，只把<strong>「怎么把某件事做好」</strong>写成可以照着执行的步骤。</p>
+            <div class="eg"><span class="k">例</span>合同审查 · 内容工厂</div>
+            <div class="card-note"><b>Skill</b> ｜ 技能、技艺 —— 可复用的能力单元。</div>
+          </article>
+
+          <article class="card reveal">
+            <div class="card-head">
+              <span class="card-no">Nº 02</span>
+              <span class="card-latin">AGENT</span>
+            </div>
+            <h3>智能体</h3>
+            <p>能自主感知、决策、调用工具、完成目标的系统。<strong>目标由人给出，路径由它自己拆。</strong></p>
+            <ul class="subs">
+              <li><span class="s-en">PERSONAL AGENT</span><b>个人智能体</b>：长期只服务一个人，记住他的偏好和历史。</li>
+              <li><span class="s-en">DIGITAL EMPLOYEE</span><b>数字员工</b>：企业版的个人智能体，把「服务一个人」换成「承担一个岗位」。</li>
+            </ul>
+            <div class="card-note"><b>Agent</b> ｜ 代理人、行动者 —— 能自主行动的系统。</div>
+          </article>
+
+          <article class="card reveal">
+            <div class="card-head">
+              <span class="card-no">Nº 03</span>
+              <span class="card-latin">MULTI-AGENT</span>
+            </div>
+            <h3>多智能体协作</h3>
+            <p>多个 Agent 分工配合，把一件复杂的事切成几段，由不同角色分别推进，最后汇到一处。</p>
+            <div class="p-terms">
+              <span>多 Agent 团队</span><span>Agent 小队</span><span>专家团</span><span>专家团队</span>
+            </div>
+            <div class="card-note"><b>Multi-Agent</b> ｜ multi（多）+ agent（智能体）。</div>
+          </article>
+
+          <article class="card reveal">
+            <div class="card-head">
+              <span class="card-no">Nº 04</span>
+              <span class="card-latin">COPILOT</span>
+            </div>
+            <h3>副驾驶</h3>
+            <p>人主导、AI 辅助。它嵌在你正在用的工具里，做补全、改写、检查这类贴身动作，<strong>但不接管整件事</strong>。</p>
+            <div class="eg"><span class="k">场景</span>写邮件 · 改代码 · 审文档</div>
+            <div class="card-note"><b>Copilot</b> ｜ co（共同）+ pilot（驾驶者）—— 副驾驶。</div>
+          </article>
+        </div>
+      </section>
+
+      <!-- ========== 02 层级 ========== -->
+      <section class="sec" id="layers">
+        <div class="sec-head reveal">
+          <span class="sec-no">02</span>
+          <div>
+            <div class="sec-kicker">FROM NATURE TO PACKAGING</div>
+            <h2>三个层次，一次看清</h2>
+          </div>
+        </div>
+        <p class="sec-lead reveal">
+          把术语按层排开，混乱会立刻消失：技术层决定能力，组织层决定规模，命名层决定它出现在哪里。
+        </p>
+
+        <div class="layers">
+          <div class="layer reveal">
+            <div>
+              <span class="l-code">L1</span>
+              <span class="l-cn">技术层</span>
+              <span class="l-en">TECHNICAL</span>
+            </div>
+            <div>
+              <div class="l-chips">
+                <span class="chip">技能<small>SKILL</small></span>
+                <span class="chip">智能体<small>AGENT</small></span>
+                <span class="chip">多智能体<small>MULTI-AGENT</small></span>
+                <span class="chip">副驾驶<small>COPILOT</small></span>
+              </div>
+              <div class="l-desc">它凭什么工作 —— 能力从哪里来。</div>
+            </div>
+          </div>
+
+          <div class="l-link reveal"><span class="bar"></span>包装为 · PACKAGED AS</div>
+
+          <div class="layer reveal">
+            <div>
+              <span class="l-code">L2</span>
+              <span class="l-cn">组织层</span>
+              <span class="l-en">ORGANIZATIONAL</span>
+            </div>
+            <div>
+              <div class="l-chips">
+                <span class="chip">单个智能体<small>SINGLE AGENT</small></span>
+                <span class="chip">小队<small>SQUAD</small></span>
+                <span class="chip">团队<small>TEAM</small></span>
+                <span class="chip">专家团<small>EXPERT GROUP</small></span>
+              </div>
+              <div class="l-desc">几个人干活 —— 单兵，还是组队。</div>
+            </div>
+          </div>
+
+          <div class="l-link reveal"><span class="bar"></span>命名为 · NAMED AS</div>
+
+          <div class="layer reveal">
+            <div>
+              <span class="l-code">L3</span>
+              <span class="l-cn">命名层</span>
+              <span class="l-en">NAMING</span>
+            </div>
+            <div>
+              <div class="l-chips">
+                <span class="chip">Bot / 机器人<small>BOT</small></span>
+                <span class="chip">伙伴<small>PARTNER</small></span>
+                <span class="chip">工作搭子<small>WORK BUDDY</small></span>
+                <span class="chip">Dots · Muse · Cue<small>PRODUCT NAME</small></span>
+              </div>
+              <div class="l-desc">用户看到的名字 —— 同一件事，不同招牌。</div>
+            </div>
+          </div>
+        </div>
+
+        <p class="sec-lead reveal" style="margin-top:34px">
+          同一个技术内核，会被不同平台包装成完全不同的身份。判断一个产品到底是什么，<strong style="color:var(--ink)">先往回看它落在哪一层</strong>。
+        </p>
+      </section>
+
+      <!-- ========== 03 产品叫法 ========== -->
+      <section class="sec" id="packaging">
+        <div class="sec-head reveal">
+          <span class="sec-no">03</span>
+          <div>
+            <div class="sec-kicker">PRODUCT PACKAGING</div>
+            <h2>按产品包装分类</h2>
+          </div>
+        </div>
+        <p class="sec-lead reveal">
+          同一件事，不同的包装方式。产品页上的说法通常停在这一层，不再往技术层解释。
+        </p>
+
+        <div class="pack">
+          <div class="pack-item reveal">
+            <div class="p-key">A</div>
+            <div class="p-body">
+              <h3>入口与身份<span>ENTRY &amp; IDENTITY</span></h3>
+              <p>面向用户的对话入口。背后可以是一个 Agent，<strong>也可以只是一个聊天程序</strong> —— 名字好听，不等于能力强。</p>
+              <div class="p-terms"><span>Bot 机器人</span><span>伙伴</span><span>工作搭子</span></div>
+            </div>
+          </div>
+
+          <div class="pack-item reveal">
+            <div class="p-key">B</div>
+            <div class="p-body">
+              <h3>协作形态<span>COLLABORATION FORM</span></h3>
+              <p>多个 AI 角色组队干活。包装上叫「小队」或「团队」，技术上是多智能体协作。</p>
+              <div class="p-terms"><span>小队</span><span>团队</span><span>专家团</span></div>
+            </div>
+          </div>
+
+          <div class="pack-item reveal">
+            <div class="p-key">C</div>
+            <div class="p-body">
+              <h3>云端个人智能体<span>CLOUD PERSONAL AGENT</span></h3>
+              <p>各家为「长期服务一个人的云端智能体」起的名字，基本是一对一命名的产品。</p>
+
+              <div class="roster">
+                <div class="r-item"><div class="r-co">OPENAI</div><div class="r-name">Dots</div><div class="r-zh">字面「圆点」，在此为产品名。</div></div>
+                <div class="r-item"><div class="r-co">xAI</div><div class="r-name">Grok Bot</div><div class="r-zh">Grok 意为「彻底理解」，Bot 为机器人。</div></div>
+                <div class="r-item"><div class="r-co">META</div><div class="r-name">Muse</div><div class="r-zh">字面「缪斯」，司文艺的女神，引申为灵感。</div></div>
+                <div class="r-item"><div class="r-co">ANTHROPIC</div><div class="r-name">Claude Duet</div><div class="r-zh">Duet 意为「二重奏」，双人同台。</div></div>
+                <div class="r-item"><div class="r-co">MANUS</div><div class="r-name">Cue</div><div class="r-zh">字面「提示、暗号」。</div></div>
+                <div class="r-item"><div class="r-co">豆包 / DOUBAO</div><div class="r-name sm">伙伴 · 小队</div><div class="r-zh">中文命名，非英文产品名。</div></div>
+              </div>
+              <div class="roster-note">以上为各平台对外使用的命名，具体形态与能力以官方说明为准。</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========== 04 辨析 ========== -->
+      <section class="sec" id="distinctions">
+        <div class="sec-head reveal">
+          <span class="sec-no">04</span>
+          <div>
+            <div class="sec-kicker">KEY DISTINCTIONS</div>
+            <h2>三组关键辨析</h2>
+          </div>
+        </div>
+        <p class="sec-lead reveal">
+          最容易混的三组词，逐对拆开。每组只问一句：谁在掌握主动权。
+        </p>
+
+        <div class="duels">
+          <div class="duel reveal">
+            <div class="d-side">
+              <div class="d-label">技术本质 · SUBSTANCE</div>
+              <h4>Agent<span>智能体</span></h4>
+              <p>能自主感知、决策、行动的系统。目标是别人给的，步骤是自己想的。</p>
+            </div>
+            <div class="d-mid"><span>VS</span></div>
+            <div class="d-side right">
+              <div class="d-label">产品包装 · PACKAGE</div>
+              <h4>Bot<span>机器人</span></h4>
+              <p>有固定身份、长期记忆、能定时开工的 Agent。用户看到的是角色，不是内核。</p>
+            </div>
+          </div>
+          <div class="d-take reveal" style="padding-bottom:34px">Bot 通常是 Agent 的一种呈现方式，但 Agent 不一定是 Bot。</div>
+
+          <div class="duel reveal" style="border-top:none;padding-top:8px">
+            <div class="d-side">
+              <div class="d-label">辅助 · ASSIST</div>
+              <h4>Copilot<span>副驾驶</span></h4>
+              <p>人握方向盘，AI 只在当前这一步帮忙：补全、改写、检查。</p>
+            </div>
+            <div class="d-mid"><span>VS</span></div>
+            <div class="d-side right">
+              <div class="d-label">自主 · AUTONOMY</div>
+              <h4>Agent<span>智能体</span></h4>
+              <p>你给一个目标，它自己拆步骤、调工具，一步步往前推。</p>
+            </div>
+          </div>
+          <div class="d-take reveal" style="padding-bottom:34px">Copilot 帮你做这一步，Agent 替你把这件事做完。</div>
+
+          <div class="duel reveal" style="border-top:none;padding-top:8px">
+            <div class="d-side">
+              <div class="d-label">单兵 · SOLO</div>
+              <h4>单 Agent<span>一个人干</span></h4>
+              <p>一个角色从头做到尾，链条短，适合线性、边界清楚的任务。</p>
+            </div>
+            <div class="d-mid"><span>VS</span></div>
+            <div class="d-side right">
+              <div class="d-label">组队 · TEAM</div>
+              <h4>多 Agent<span>多人分工</span></h4>
+              <p>有人统筹、有人执行、有人汇总，适合环节多、需要并行的复杂项目。</p>
+            </div>
+          </div>
+          <div class="d-take reveal">团队的价值不在「更多」，而在「分工」与「有人收口」。</div>
+        </div>
+      </section>
+
+      <!-- ========== 05 口诀 ========== -->
+      <section class="creed" id="mnemonic">
+        <div class="creed-kicker">MNEMONIC · 记忆口诀</div>
+        <p class="fade-up">Agent 是技术本质，<span class="dim">Bot / 伙伴 / 副驾驶 是产品包装。</span></p>
+        <p class="fade-up" style="animation-delay:.12s">Copilot 帮你写，Agent 帮你干，<span class="gold">多 Agent 团队帮你搞定一整套项目。</span></p>
+      </section>
+
+      <!-- ========== 06 术语表 ========== -->
+      <section class="sec" id="glossary">
+        <div class="sec-head reveal">
+          <span class="sec-no">06</span>
+          <div>
+            <div class="sec-kicker">GLOSSARY</div>
+            <h2>术语对照表</h2>
+          </div>
+        </div>
+        <p class="sec-lead reveal">
+          页面出现过的英文词，逐条对照：中文译名、词义来源、在此处的具体含义。
+        </p>
+
+        <!-- 核心术语 -->
+        <div class="g-block reveal">
+          <div class="g-head"><h3>核心术语</h3><span>CORE TERMS</span></div>
+          <dl class="g-list">
+            <div class="g-row">
+              <dt>Agent<span class="pos">名 · NOUN</span></dt>
+              <dd><b>智能体 / 代理人</b>
+                <p>能自主感知、决策、调用工具、完成目标的系统。词源为拉丁语 agere，「去做、驱动」，原义是「执行者、行事者」。</p></dd>
+            </div>
+            <div class="g-row">
+              <dt>Skill<span class="pos">名 · NOUN</span></dt>
+              <dd><b>技能 / 技艺</b>
+                <p>一套可反复复用的操作说明或工作流。在智能体语境里，它是可被调用、可被继承的能力包，而不是一个独立的主体。</p></dd>
+            </div>
+            <div class="g-row">
+              <dt>Multi-Agent<span class="pos">名 · NOUN</span></dt>
+              <dd><b>多智能体（协作）</b>
+                <p>multi 意为「多」，agent 意为「智能体」。指多个智能体分工配合，共同推进同一件复杂任务。</p></dd>
+            </div>
+            <div class="g-row">
+              <dt>Copilot<span class="pos">名 · NOUN</span></dt>
+              <dd><b>副驾驶 / 辅助智能</b>
+                <p>co 意为「共同」，pilot 意为「驾驶者」，合起来即「副驾驶」。指人主导、AI 在当前步骤上提供补全、改写、检查的辅助形态。</p></dd>
+            </div>
+            <div class="g-row">
+              <dt>Personal Agent<span class="pos">名词短语</span></dt>
+              <dd><b>个人智能体</b>
+                <p>personal 意为「个人的」。长期只服务同一个人、持续积累其偏好与历史的智能体。</p></dd>
+            </div>
+            <div class="g-row">
+              <dt>Digital Employee<span class="pos">名词短语</span></dt>
+              <dd><b>数字员工</b>
+                <p>digital 意为「数字的」，employee 意为「雇员」。企业版的个人智能体，服务对象从「一个人」换成「一个岗位」。</p></dd>
+            </div>
+            <div class="g-row">
+              <dt>Bot<span class="pos">名 · NOUN</span></dt>
+              <dd><b>机器人 / 机器人角色</b>
+                <p>robot 的缩写，原义为「机器人」。在产品层，指有固定身份、长期记忆、能定时开工的智能体；有时也泛指任何自动化对话程序。</p></dd>
+            </div>
+            <div class="g-row">
+              <dt>Squad<span class="pos">名 · NOUN</span></dt>
+              <dd><b>小队 / 班组</b>
+                <p>指人数较少、结构扁平的一组协作者。用在智能体产品上，强调「几个角色刚好够用」。</p></dd>
+            </div>
+            <div class="g-row">
+              <dt>Team<span class="pos">名 · NOUN</span></dt>
+              <dd><b>团队</b>
+                <p>为同一目标组织起来的一组角色，通常含统筹、执行、汇总的分工。</p></dd>
+            </div>
+            <div class="g-row">
+              <dt>Expert Group<span class="pos">名词短语</span></dt>
+              <dd><b>专家团</b>
+                <p>expert 意为「专家」，group 意为「组」。指按专业领域划分、各管一摊的多智能体组合。</p></dd>
+            </div>
+          </dl>
+        </div>
+
+        <!-- 页面用词 -->
+        <div class="g-block reveal">
+          <div class="g-head"><h3>页面用词</h3><span>PAGE LABELS</span></div>
+          <div class="g-mini">
+            <div class="gm"><b>FIELD NOTES</b><span>现场笔记 —— 未定稿的观察记录</span></div>
+            <div class="gm"><b>AGENT LEXICON</b><span>智能体词库；lexicon 意为「词典、词汇表」</span></div>
+            <div class="gm"><b>CONTENTS</b><span>目录</span></div>
+            <div class="gm"><b>TECHNICAL NATURE</b><span>技术本质；nature 意为「本性」</span></div>
+            <div class="gm"><b>ORGANIZATIONAL</b><span>组织的 —— 指「谁和谁组队」这一层</span></div>
+            <div class="gm"><b>NAMING</b><span>命名 —— 指对外叫什么名字</span></div>
+            <div class="gm"><b>PRODUCT PACKAGING</b><span>产品包装；packaging 原义「包装、封装」</span></div>
+            <div class="gm"><b>KEY DISTINCTIONS</b><span>关键区别；distinction 意为「分辨、差别」</span></div>
+            <div class="gm"><b>MNEMONIC</b><span>记忆口诀；源自希腊语，意为「助记」</span></div>
+            <div class="gm"><b>GLOSSARY</b><span>术语表</span></div>
+            <div class="gm"><b>ENTRY &amp; IDENTITY</b><span>入口与身份；entry 入口，identity 身份</span></div>
+            <div class="gm"><b>COLLABORATION FORM</b><span>协作形态；collaboration 协作</span></div>
+            <div class="gm"><b>CLOUD PERSONAL AGENT</b><span>云端个人智能体</span></div>
+            <div class="gm"><b>SUBSTANCE / PACKAGE</b><span>实质 / 包装 —— 辨析两侧的对照标签</span></div>
+            <div class="gm"><b>ASSIST / AUTONOMY</b><span>辅助 / 自主；autonomy 意为「自治」</span></div>
+            <div class="gm"><b>SOLO / TEAM</b><span>单兵 / 组队</span></div>
+            <div class="gm"><b>VS</b><span>versus 的缩写，意为「对、相较」</span></div>
+            <div class="gm"><b>L1 · L2 · L3</b><span>Layer 1–3，第 1 至 3 层</span></div>
+          </div>
+        </div>
+
+        <!-- 产品名 -->
+        <div class="g-block reveal">
+          <div class="g-head"><h3>产品名</h3><span>PRODUCT NAMES</span></div>
+          <dl class="g-list">
+            <div class="g-row">
+              <dt>Dots<span class="pos">产品名 · OPENAI</span></dt>
+              <dd><b>点（复数）</b>
+                <p>dot 意为「点」。作为产品名不直译，此处指 OpenAI 的云端个人智能体入口命名。</p></dd>
+            </div>
+            <div class="g-row">
+              <dt>Grok / Grok Bot<span class="pos">产品名 · xAI</span></dt>
+              <dd><b>彻底理解 / 机器人</b>
+                <p>grok 出自科幻作家海因莱因小说，意为「彻底地、直觉地理解」，现为科技圈常用词。Bot 即机器人，合起来指该平台的角色化智能体命名。</p></dd>
+            </div>
+            <div class="g-row">
+              <dt>Muse<span class="pos">产品名 · META</span></dt>
+              <dd><b>缪斯 / 灵感</b>
+                <p>源自希腊神话中掌管文艺的九位缪斯女神，引申为「灵感、启示」。此处作为个人智能体产品名使用。</p></dd>
+            </div>
+            <div class="g-row">
+              <dt>Claude Duet<span class="pos">产品名 · ANTHROPIC</span></dt>
+              <dd><b>二重奏</b>
+                <p>Claude 为 Anthropic 的 AI 助手名称；duet 意为「二重奏、双人表演」，暗示人与 AI 两个角色同台协作。</p></dd>
+            </div>
+            <div class="g-row">
+              <dt>Cue<span class="pos">产品名 · MANUS</span></dt>
+              <dd><b>提示 / 暗号</b>
+                <p>原指给演员的提词或行动信号，引申为「恰到好处的提示」。此处作为产品命名使用。</p></dd>
+            </div>
+            <div class="g-row">
+              <dt>Partner / Work Buddy<span class="pos">通用叫法</span></dt>
+              <dd><b>伙伴 / 工作搭子</b>
+                <p>partner 意为「伙伴」，buddy 意为「哥们、搭子」。两者都是把智能体包装成「同事关系」而非「工具」的叫法。</p></dd>
+            </div>
+          </dl>
+        </div>
+      </section>
+
+      <footer>
+        <div class="foot-inner">
+          <div class="foot-note">
+            整理说明：本手册按对话资料重构，保留原有分类与叫法。英文释义为通用词义、构词拆解与词源说明，产品名为各平台对外命名示例，字面义仅供理解参考，具体形态与能力以官方说明为准。
+          </div>
+          <div class="foot-sign">
+            AGENT LEXICON<br>2026 · 单页文档
+          </div>
+        </div>
+      </footer>
+
+    </main>
+  </div>
+</div>
+
+<script>
+  // 顶部进度条
+  const fill = document.querySelector('.progress-fill');
+  const onScroll = () => {
+    const h = document.documentElement;
+    const max = h.scrollHeight - h.clientHeight;
+    const p = max > 0 ? h.scrollTop / max : 0;
+    fill.style.transform = 'scaleX(' + p.toFixed(4) + ')';
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+  onScroll();
+
+  // 入场
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+
+  document.querySelectorAll('.reveal').forEach((el, i) => {
+    el.style.transitionDelay = ((i % 4) * 70) + 'ms';
+    io.observe(el);
+  });
+
+  // 目录高亮
+  const links = Array.from(document.querySelectorAll('.toc a'));
+  const secs = links.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+  const syncToc = () => {
+    const y = window.scrollY + window.innerHeight * 0.3;
+    let cur = secs[0];
+    secs.forEach(s => {
+      const top = s.getBoundingClientRect().top + window.scrollY;
+      if (top <= y) cur = s;
+    });
+    links.forEach(l => l.classList.toggle('on', l.getAttribute('href') === '#' + cur.id));
+  };
+  window.addEventListener('scroll', syncToc, { passive: true });
+  syncToc();
+</script>
+</body>
+</html>
